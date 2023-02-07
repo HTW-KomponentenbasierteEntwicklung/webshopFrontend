@@ -15,6 +15,7 @@
 import ProductItem from "@/components/ProductItem.vue";
 import NavBar from "../components/NavBar.vue";
 
+
 export default  {
   name: "ProductsView",
   data: () => ({
@@ -26,6 +27,7 @@ export default  {
     ProductItem
 }
 }
+
 </script>
 <style>
 .paddingTop100{

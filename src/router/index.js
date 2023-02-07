@@ -8,11 +8,17 @@ const routes = [
   {
     path: '/',
     name: 'home',
+    meta: {
+      isAuthenticated: false
+    },
     component: HomeView
   },
   {
     path: '/products',
     name: 'products',
+    meta: {
+      isAuthenticated: true
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -21,6 +27,9 @@ const routes = [
   {
     path: '/crabbe',
     name: 'productDescription',
+    meta: {
+      isAuthenticated: false
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -29,6 +38,9 @@ const routes = [
   {
     path: '/account',
     name: 'accountManagement',
+    meta: {
+      isAuthenticated: true
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -37,6 +49,9 @@ const routes = [
   {
     path: '/cart',
     name: 'cartReview',
+    meta: {
+      isAuthenticated: true
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -45,6 +60,9 @@ const routes = [
   {
     path: '/orderDetails',
     name: 'orderDetailsView',
+    meta: {
+      isAuthenticated: true
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -53,6 +71,9 @@ const routes = [
   {
     path: '/checkout',
     name: 'checkoutView',
+    meta: {
+      isAuthenticated: true
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -64,6 +85,29 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.isAuthenticated) {
+    // Get the actual url of the app, it's needed for Keycloak
+    const basePath = window.location.toString()
+    if (!Vue.$keycloak.authenticated) {
+      // The page is protected and the user is not authenticated. Force a login.
+      Vue.$keycloak.login({ redirectUri: basePath})
+    } else {
+      // The user was authenticated, and has the app role (is authorized). Update the token.
+      Vue.$keycloak.updateToken(70)
+        .then(() => {
+          next()
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    } 
+  } else {
+    // This page did not require authentication
+    next()
+  }
 })
 
 export default router

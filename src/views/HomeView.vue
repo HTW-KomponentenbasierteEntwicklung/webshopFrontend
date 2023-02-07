@@ -79,6 +79,8 @@ import CategoryMenu from "../components/CategoryMenu.vue";
 //import ProductItem from "../components/ProductItem.vue";
 import ClientCard from "../components/ClientCard.vue";
 import TopProducts from "../components/TopProducts.vue";
+
+
 export default {
   name: "HomeView",
   data: () => ({
@@ -93,9 +95,7 @@ export default {
     ClientCard,
     TopProducts
 },
-  methods: {
 
-      }
 };
 </script>
 <style >
